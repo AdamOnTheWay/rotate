@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #div {
+            position: absolute;
+            bottom: 350px;
+            left: 100px;
+            width: 200px;
+            height: 200px;
+            line-height: 300px;
+            text-align: center;
+            border: 1px solid black;
+        }
+    </style>
+    <script type="text/javascript">
+        var rotateHTML5 = function (limit)
+        {
+            var reg = /(rotate\([\-\+]?((\d+)(deg))\))/i;
+            var wt = div.style['-webkit-transform'], wts = wt.match (reg);
+            var $2 = RegExp.$2;
+            console.log ($2);
+            div.style['-webkit-transform'] = wt.replace ($2, parseFloat (RegExp.$3) + limit + RegExp.$4);
+        }
+
+        var rotateIE = function (obj)
+        {
+            var d = !!obj.d ? obj.d : 1;
+            var r = d * Math.PI / 180;
+            costheta = Math.cos (r);
+            sintheta = Math.sin (r);
+            obj.style.filter = "progid:DXImageTransform.Microsoft.Matrix()";
+            var item = obj.filters.item (0);
+            var width = obj.clientWidth;
+            var height = obj.clientHeight;
+            item.DX = -width / 2 * costheta + height / 2 * sintheta + width / 2;
+            item.DY = -width / 2 * sintheta - height / 2 * costheta + height / 2;
+            item.M11 = costheta;
+            item.M12 = -sintheta;
+            item.M21 = sintheta;
+            item.M22 = costheta;
+            obj.timer = setTimeout (function ()
+            {
+                var dx = d + 1;
+                dx = dx > 360 ? 1 : dx;
+                obj.d = dx;
+                rotate (obj, dx);
+            }, 30);
+        };
+
+        var start = function ()
+        {
+            div.interval = setInterval (function ()
+            {
+                /.*webkit.*/i.test (navigator.userAgent) ? rotateHTML5 (1) : rotateIE (div);
+            }, 30);
+        }
+    </script>
+</head>
+<body onload="start()">
+<div id="div" style=" -webkit-transform: rotate(10deg);">
+    <img src="899883975e0d7a5cefe6028244cf0e3c.jpg" style="height: 200px;width: 200px">
+</div>
+</body>
+</html>
